@@ -40,5 +40,11 @@ namespace Genzeon.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<Genzeon.ViewModels.Tech> Teches { get; set; }
+
+        public System.Data.Entity.DbSet<Genzeon.ViewModels.TeamNames> TeamNames { get; set; }
+
+        public System.Data.Entity.DbSet<Genzeon.ViewModels.RequirementData> RequirementDatas { get; set; }
     }
 }

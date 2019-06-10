@@ -1,0 +1,82 @@
+﻿@model Genzeon.ViewModels.RequirementData
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>RequirementData</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TeamNames.TeamName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TeamNames.TeamName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tech.TechName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tech.TechName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.positionName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.positionName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.skills)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.skills)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.requiredSize)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.requiredSize)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.experience)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.experience)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.jobDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.jobDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.uploadedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.uploadedBy)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.jobCode }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
