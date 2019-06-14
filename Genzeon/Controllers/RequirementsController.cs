@@ -8,22 +8,37 @@ using System.Web;
 using System.Web.Mvc;
 using Genzeon.Models;
 using Genzeon.ViewModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace Genzeon.Controllers
 {
-    public class RequirementDetailsController : Controller
+    [Authorize]
+    public class RequirementsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
-        // GET: RequirementDetails
-        public ActionResult Index()
+        public ApplicationUserManager _userManager;
+        public ApplicationUserManager UserManager
         {
-            var requirementDatas = db.RequirementDatas.Include(r => r.TeamNames).Include(r => r.Tech);
-            return View(requirementDatas.ToList());
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+        //Requirements List
+        public ActionResult RequirementList()
+        {
+            var Email = HttpContext.User.Identity.GetUserName();
+            var totalRequriement = db.RequirementDatas.Count();
+            return View(db.RequirementDatas.Where(acc=>acc.Email.Equals(Email)).Include(r => r.TeamNames).Include(r => r.Tech).OrderByDescending(v=>v.Date));
         }
 
-        // GET: RequirementDetails/Details/5
-        public ActionResult Details(int? id)
+        //Requirements Details by each id
+        public ActionResult RequirementInfo(int? id)
         {
             if (id == null)
             {
@@ -37,26 +52,27 @@ namespace Genzeon.Controllers
             return View(requirementData);
         }
 
-        // GET: RequirementDetails/Create
-        public ActionResult Create()
+        //Adding new Requirements
+        public ActionResult AddRequirement()
         {
             ViewBag.TeamId = new SelectList(db.TeamNames, "TeamId", "TeamName");
             ViewBag.TechId = new SelectList(db.Teches, "TechId", "TechName");
             return View();
         }
 
-        // POST: RequirementDetails/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "jobCode,positionName,skills,requiredSize,experience,jobDescription,uploadedBy,TechId,TeamId")] RequirementData requirementData)
+        public ActionResult AddRequirement([Bind(Include = "JobCode,DesignationName,Experience,Location,Qualification,Salary,Vacancies,ShiftType,Description,TechId,TeamId")] RequirementData requirementData)
         {
+            var ApplicationUserId = User.Identity.GetUserName();
+            requirementData.Email = ApplicationUserId;
+            DateTime d = DateTime.Now;
+            requirementData.Date = d.ToShortDateString();
             if (ModelState.IsValid)
             {
                 db.RequirementDatas.Add(requirementData);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("RequirementList");
             }
 
             ViewBag.TeamId = new SelectList(db.TeamNames, "TeamId", "TeamName", requirementData.TeamId);
@@ -64,8 +80,8 @@ namespace Genzeon.Controllers
             return View(requirementData);
         }
 
-        // GET: RequirementDetails/Edit/5
-        public ActionResult Edit(int? id)
+        // Requirements Edit by using Id
+        public ActionResult UpdateRequirement(int? id)
         {
             if (id == null)
             {
@@ -81,26 +97,26 @@ namespace Genzeon.Controllers
             return View(requirementData);
         }
 
-        // POST: RequirementDetails/Edit/5
+        // POST: Requirements/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "jobCode,positionName,skills,requiredSize,experience,jobDescription,uploadedBy,TechId,TeamId")] RequirementData requirementData)
+        public ActionResult UpdateRequirement([Bind(Include = "JobCode,DesignationName,Experience,Location,Qualification,Salary,Vacancies,ShiftType,Description,Date,TechId,TeamId,Email")] RequirementData requirementData)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(requirementData).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("RequirementList");
             }
             ViewBag.TeamId = new SelectList(db.TeamNames, "TeamId", "TeamName", requirementData.TeamId);
             ViewBag.TechId = new SelectList(db.Teches, "TechId", "TechName", requirementData.TechId);
             return View(requirementData);
         }
 
-        // GET: RequirementDetails/Delete/5
-        public ActionResult Delete(int? id)
+        // Delete the Requirement by Id 
+        public ActionResult DeleteRequirement(int? id)
         {
             if (id == null)
             {
@@ -114,15 +130,14 @@ namespace Genzeon.Controllers
             return View(requirementData);
         }
 
-        // POST: RequirementDetails/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteRequirement")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             RequirementData requirementData = db.RequirementDatas.Find(id);
             db.RequirementDatas.Remove(requirementData);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("RequirementList");
         }
 
         protected override void Dispose(bool disposing)

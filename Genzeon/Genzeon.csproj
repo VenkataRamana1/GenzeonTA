@@ -185,9 +185,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\RequirementDetailsController.cs" />
-    <Compile Include="Controllers\TeamNamesController.cs" />
-    <Compile Include="Controllers\TechesController.cs" />
+    <Compile Include="Controllers\RequirementsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -201,6 +199,7 @@
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
     <Compile Include="ViewModels\InterviewViewModel.cs" />
     <Compile Include="ViewModels\RequirementPostViewModel.cs" />
+    <Compile Include="ViewModels\Requirements.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AdminLTE-2.4.10\Admin\bower_components\bootstrap-colorpicker\dist\css\bootstrap-colorpicker.css" />
@@ -6626,8 +6625,6 @@
     <Content Include="AdminLTE-2.4.10\Admin\starter.html" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bower_components\bootstrap-colorpicker\dist\css\bootstrap-colorpicker.css" />
     <Content Include="Content\bower_components\bootstrap-colorpicker\dist\css\bootstrap-colorpicker.min.css" />
     <Content Include="Content\bower_components\bootstrap-colorpicker\dist\img\bootstrap-colorpicker\alpha-horizontal.png" />
@@ -12852,6 +12849,8 @@
     <Content Include="Content\dist\js\demo.js" />
     <Content Include="Content\dist\js\pages\dashboard.js" />
     <Content Include="Content\dist\js\pages\dashboard2.js" />
+    <Content Include="Content\Icons\Dashboard.png" />
+    <Content Include="Content\Icons\requirement.png" />
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Login.css" />
     <Content Include="Content\plugins\bootstrap-slider\bootstrap-slider.js" />
@@ -12996,6 +12995,7 @@
     <Content Include="Content\plugins\timepicker\bootstrap-timepicker.js" />
     <Content Include="Content\plugins\timepicker\bootstrap-timepicker.min.css" />
     <Content Include="Content\plugins\timepicker\bootstrap-timepicker.min.js" />
+    <Content Include="dummy.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -14280,21 +14280,11 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\Info.cshtml" />
-    <Content Include="Views\Teches\Create.cshtml" />
-    <Content Include="Views\Teches\Delete.cshtml" />
-    <Content Include="Views\Teches\Details.cshtml" />
-    <Content Include="Views\Teches\Edit.cshtml" />
-    <Content Include="Views\Teches\Index.cshtml" />
-    <Content Include="Views\TeamNames\Create.cshtml" />
-    <Content Include="Views\TeamNames\Delete.cshtml" />
-    <Content Include="Views\TeamNames\Details.cshtml" />
-    <Content Include="Views\TeamNames\Edit.cshtml" />
-    <Content Include="Views\TeamNames\Index.cshtml" />
-    <Content Include="Views\RequirementDetails\Create.cshtml" />
-    <Content Include="Views\RequirementDetails\Delete.cshtml" />
-    <Content Include="Views\RequirementDetails\Details.cshtml" />
-    <Content Include="Views\RequirementDetails\Edit.cshtml" />
-    <Content Include="Views\RequirementDetails\Index.cshtml" />
+    <Content Include="Views\Requirements\AddRequirement.cshtml" />
+    <Content Include="Views\Requirements\DeleteRequirement.cshtml" />
+    <Content Include="Views\Requirements\RequirementInfo.cshtml" />
+    <Content Include="Views\Requirements\UpdateRequirement.cshtml" />
+    <Content Include="Views\Requirements\RequirementList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -14338,7 +14328,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>49915</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:49915/</IISUrl>
+          <IISUrl>http://localhost:49916/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

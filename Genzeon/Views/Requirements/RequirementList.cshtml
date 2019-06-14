@@ -1,0 +1,99 @@
+﻿@model IEnumerable<Genzeon.ViewModels.RequirementData>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "AddRequirement")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.TeamNames.TeamName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Tech.TechName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DesignationName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Experience)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Location)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Qualification)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Salary)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Vacancies)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ShiftType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.TeamNames.TeamName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Tech.TechName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DesignationName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Experience)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Location)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Qualification)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Salary)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Vacancies)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ShiftType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "UpdateRequirement", new { id=item.JobCode }) |
+            @Html.ActionLink("Details", "RequirementInfo", new { id=item.JobCode }) |
+            @Html.ActionLink("Delete", "DeleteRequirement", new { id=item.JobCode })
+        </td>
+    </tr>
+}
+
+</table>

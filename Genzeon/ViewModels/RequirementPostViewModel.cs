@@ -1,38 +1,54 @@
-﻿using Genzeon.ViewModels;
+﻿using Genzeon.Models;
+using Genzeon.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Genzeon.ViewModels
 {
     public class RequirementData
     {
         [Key]
-        public int jobCode { get; set; }
+        public int JobCode { get; set; }
 
         [Required]
-        [Display(Name ="Position Name")]
-        public string positionName { get; set; }
+        [Display(Name = "Position Name")]
+        public string DesignationName { get; set; }
 
         [Required]
-        [Display(Name = "Required Skills")]
-        public string skills { get; set; }
-
-        [Display(Name = "Required no of people")]
-        public int requiredSize { get; set; }
-
         [Display(Name = "Experience")]
-        public string experience { get; set; }
+        public string Experience { get; set; }
 
+        [Required]
+        [Display(Name = " Location")]
+        public string Location { get; set; }
+
+        [Required]
+        [Display(Name = "Qualification")]
+        public string Qualification { get; set; }
+        
+        [Display(Name = "Salary")]
+        [DataType(DataType.Currency)]
+        public string Salary { get; set; }
+             
+        [Display(Name = "No of Vacancy")]
+        public int Vacancies { get; set; }
+
+        [Display(Name = "Shift Type")]
+        public string ShiftType { get; set; }
+
+        [Required]
+        [AllowHtml]
         [Display(Name = "Job Description")]
-        [StringLength(30, ErrorMessage = "Job description shoulb have atleast 30 characters")]
-        public string jobDescription { get; set; }
-     
-        [DataType(DataType.Text)]
-        public string uploadedBy { get; set; }
+        public string Description { get; set; }
 
+        [Display(Name ="Added On")]
+        public String Date { get; set; }
+        
         public int TechId { get; set; }
         public virtual Tech Tech { get; set; }
 
@@ -43,6 +59,12 @@ namespace Genzeon.ViewModels
 
         public virtual ICollection<InterviewViewModel> interviewViewModel { get; set; }
 
+        
+        public string Email { get; set; }
+        
+        public ApplicationUser ApplicationUser { get; set; }
+
+       
     }
 
     public class Tech

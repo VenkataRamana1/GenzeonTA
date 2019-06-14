@@ -5,25 +5,14 @@
     Layout = null;
 }
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
 <link href="~/Content/Login.css" rel="stylesheet" />
 
-
-
-
-
-
-
-
-<body style="overflow-y:hidden">
+<body style="overflow-y:hidden;padding-top:50px">
     <div>
-
         <div class="sub-main-w3">
             <div class="bg-content-w3pvt">
                 <div class="top-content-style">
                     <img src="~/Content/Images/logo.png" />
-
                 </div>
                 <section id="loginForm">
                     @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -36,16 +25,10 @@
                             @Html.TextBoxFor(m => m.Email, new { @Placeholder = "Email" ,@required="required"})
                             <span class="fa fa-envelope"></span>
                         </div>
-                       
-
-
                         <div class="input">
-
                             @Html.PasswordFor(m => m.Password, new { @Placeholder = "Password", @required = "required" })
                             <span class="fa fa-unlock"></span>
-
                         </div>
-                      
                         <div class="row">
                             <div class="col-xs-8">
                                 <div class="checkbox icheck">
@@ -67,14 +50,9 @@
 
                     }
                 </section>
-
             </div>
         </div>
-
-
     </div>
-
-
 </body>
 
 
