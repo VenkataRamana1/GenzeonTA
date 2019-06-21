@@ -80,6 +80,13 @@ namespace Genzeon.Controllers
             return View(requirementData);
         }
 
+        public JsonResult GetListByEach(int TeamId)
+        {
+            db.Configuration.ProxyCreationEnabled = false;
+            List<TeamNames> TeamName = db.TeamNames.Where(v => v.TeamId == TeamId).ToList();
+            return Json(TeamName, JsonRequestBehavior.AllowGet);
+        }
+
         // Requirements Edit by using Id
         public ActionResult UpdateRequirement(int? id)
         {

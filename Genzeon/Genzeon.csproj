@@ -186,8 +186,13 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RequirementsController.cs" />
+    <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906211027288_role.cs" />
+    <Compile Include="Migrations\201906211027288_role.Designer.cs">
+      <DependentUpon>201906211027288_role.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -200,6 +205,7 @@
     <Compile Include="ViewModels\InterviewViewModel.cs" />
     <Compile Include="ViewModels\RequirementPostViewModel.cs" />
     <Compile Include="ViewModels\Requirements.cs" />
+    <Compile Include="ViewModels\RoleViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AdminLTE-2.4.10\Admin\bower_components\bootstrap-colorpicker\dist\css\bootstrap-colorpicker.css" />
@@ -14285,6 +14291,10 @@
     <Content Include="Views\Requirements\RequirementInfo.cshtml" />
     <Content Include="Views\Requirements\UpdateRequirement.cshtml" />
     <Content Include="Views\Requirements\RequirementList.cshtml" />
+    <Content Include="Views\Role\AddNewRole.cshtml" />
+    <Content Include="Views\Role\DeleteRole.cshtml" />
+    <Content Include="Views\Role\EditRole.cshtml" />
+    <Content Include="Views\Role\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -14308,6 +14318,11 @@
   <ItemGroup>
     <TypeScriptCompile Include="AdminLTE-2.4.10\Admin\bower_components\moment\moment.d.ts" />
     <TypeScriptCompile Include="Content\bower_components\moment\moment.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201906211027288_role.resx">
+      <DependentUpon>201906211027288_role.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Genzeon.Models;
+using System.Collections.Generic;
 
 namespace Genzeon.Controllers
 {
@@ -17,15 +18,29 @@ namespace Genzeon.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
+        private ApplicationRoleManager _roleManager;
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, ApplicationRoleManager roleManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            RoleManager = roleManager;
+        }
+
+        public ApplicationRoleManager RoleManager
+        {
+
+            get
+            {
+                return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+            private set
+            {
+                _roleManager = value;
+            }
         }
 
         public ApplicationSignInManager SignInManager
@@ -40,6 +55,7 @@ namespace Genzeon.Controllers
             }
         }
 
+
         public ApplicationUserManager UserManager
         {
             get
@@ -51,8 +67,6 @@ namespace Genzeon.Controllers
                 _userManager = value;
             }
         }
-
-
 
         //
         // GET: /Account/Login
@@ -75,20 +89,6 @@ namespace Genzeon.Controllers
                 return View(model);
             }
 
-            //Require the user to have confirmed email before then can login.
-            var user = await UserManager.FindByEmailAsync(model.Email);
-            if (user != null)
-            {
-                if (!await UserManager.IsEmailConfirmedAsync(user.Id))
-                {
-                    string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "confirm Email-Resend Link");
-
-                    ViewBag.errorMessage = "You must have a confirmed email to log on.";
-                    return View("Error");
-                }
-            }
-
-
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
@@ -102,7 +102,7 @@ namespace Genzeon.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Email or Password is incorrect.");
+                    ModelState.AddModelError("", "Invalid login attempt.");
                     return View(model);
             }
         }
@@ -155,7 +155,20 @@ namespace Genzeon.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            //List<SelectListItem> list = new List<SelectListItem>();
+            //foreach (var role in RoleManager.Roles)
+            //    list.Add(new SelectListItem() { Value = role.Name, Text = role.Name });
+            //ViewBag.Roles = list;
+
+
+            var _context = new ApplicationDbContext();
+            var roles = _context.Roles.ToList();
+
+            var viewModel = new RegisterViewModel
+            {
+                RolesList = roles
+            };
+            return View(viewModel);
         }
 
         //
@@ -167,25 +180,30 @@ namespace Genzeon.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Phone = model.Phone,FirstName=model.FirstName,LastName=model.LastName };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    //  Comment the following line to prevent log in until the user is confirmed.
+                     await UserManager.AddToRoleAsync(user.Id, model.RoleName);
+
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                    string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
+                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+                    // Send an email with this link
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking<a href=\"" + callbackUrl + "\">here</a>");
 
-                    ViewBag.Message = "Check your email and confirm your account, you must be confirmed "
-                                    + "before you can log in.";
-
-                    return View("Info");
-                    //return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }
 
+
             // If we got this far, something failed, redisplay form
+            var _context = new ApplicationDbContext();
+            var roles = _context.Roles.ToList();
+            model.RolesList = roles;
             return View(model);
         }
 
@@ -219,17 +237,19 @@ namespace Genzeon.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByEmailAsync(model.Email);
+                var user = await UserManager.FindByNameAsync(model.Email);
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
-
+                    // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
                 }
-                var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { UserId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password",
-                       "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
-                return View("ForgotPasswordConfirmation");
+
+                // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+                // Send an email with this link
+                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form
@@ -496,17 +516,5 @@ namespace Genzeon.Controllers
             }
         }
         #endregion
-
-
-        private async Task<string> SendEmailConfirmationTokenAsync(string userID, string subject)
-        {
-            string code = await UserManager.GenerateEmailConfirmationTokenAsync(userID);
-            var callbackUrl = Url.Action("ConfirmEmail", "Account",
-               new { userId = userID, code = code }, protocol: Request.Url.Scheme);
-            await UserManager.SendEmailAsync(userID, subject,
-               "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-            return callbackUrl;
-        }
     }
 }
